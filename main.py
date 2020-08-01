@@ -42,12 +42,15 @@ driver.get('https://www.codewars.com/users/' + USER_CW + '/completed_solutions')
 #copying first code in solutions
 program_code = driver.find_element_by_class_name('mb-5px')
 programm = program_code.text
+print(programm)
 
 #getting full name of kata
 kata_kyu = driver.find_element_by_class_name('inner-small-hex')
+print(kata_kyu.text)
 kata_text = driver.find_element_by_link_text('String repeat')
 
-kata_name_for_github = f'[{kata_kyu.text}] {kata_text.text}'
+kata_name_for_github = f'[{kata_kyu.text}] {kata_text.text}.py'
+print(kata_name_for_github)
 
 ##############
 ### singning in GITHUB
