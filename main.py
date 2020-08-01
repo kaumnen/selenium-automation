@@ -42,15 +42,13 @@ driver.get('https://www.codewars.com/users/' + USER_CW + '/completed_solutions')
 #copying first code in solutions
 program_code = driver.find_element_by_class_name('mb-5px')
 programm = program_code.text
-print(programm)
+programm_split_by_nl = programm.split('\n')
 
 #getting full name of kata
 kata_kyu = driver.find_element_by_class_name('inner-small-hex')
-print(kata_kyu.text)
 kata_text = driver.find_element_by_link_text('String repeat')
 
 kata_name_for_github = f'[{kata_kyu.text}] {kata_text.text}.py'
-print(kata_name_for_github)
 
 ##############
 ### singning in GITHUB
@@ -77,12 +75,25 @@ filename = driver.find_element_by_name('filename')
 filename.send_keys(kata_name_for_github)
 
 #pasting code inside github
-code_area = driver.find_element_by_class_name('CodeMirror-line')
-ActionChains(driver).move_to_element(code_area).click(code_area).perform()
-code_area.send_keys(programm)
+code_area = driver.find_element_by_class_name('CodeMirror-code')
+#code_area.send_keys(programm)
+#ActionChains(driver).move_to_element(code_area).click(code_area)
+for i in programm_split_by_nl:
+    code_area.send_keys(i)
+    code_area.send_keys('\n')
 
 #submitting code to repo
 commit_button = driver.find_element_by_id('submit-file')
 commit_button.click()
 
 print("thats it, thanks for using me! :)")
+
+##############
+### testing
+##############
+
+#driver.get("https://www.pastebin.com")
+#textt = driver.find_element_by_id('postform-text')
+#for i in programm_test:
+#    textt.send_keys(i)
+#    textt.send_keys('\n')
