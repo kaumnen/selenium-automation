@@ -89,7 +89,6 @@ class User:
         kata_kyu = driver.find_element_by_class_name('item-title')
         kata_prep = kata_kyu.text.split('\n')
         kata_name_for_github = f'[{kata_prep[0]}] {kata_prep[1]}.py'
-        print(kata_name_for_github)
 
         return [kata_name_for_github, program_split_by_nl]
 
