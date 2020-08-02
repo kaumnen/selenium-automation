@@ -5,3 +5,5 @@ python automation including copying code from codewars and pasting in inside git
 you can input credentials with inside terminal, or edit .env file with your creds for specific sites
 
 currently supporting github and codewars
+
+feel free to use credentials in .env file, they are made only for testing purposes!
