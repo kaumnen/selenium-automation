@@ -36,14 +36,12 @@ class User:
             EMAIL_CW = input("write your codewars email: ")
             if '@' not in EMAIL_CW:
                 self.closing_program()
-
             USER_CW = input("write your codewars username: ")
             PASSW_CW = input("write your codewars password: ")
 
             EMAIL_GH = input("write your github email: ")
             if '@' not in EMAIL_GH:
                 self.closing_program()
-
             USER_GH = input("write your github username: ")
             PASSW_GH = input("write your github password: ")
             REPO_NAME = input("write your exact github repo name: ")
