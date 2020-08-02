@@ -7,17 +7,7 @@ import sys
 import time
 load_dotenv()
 
-
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
-
-EMAIL_CW = os.getenv('codewars_email')
-USER_CW = os.getenv('codewars_username')
-PASSW_CW = os.getenv('codewars_password')
-
-EMAIL_GH = os.getenv('github_email')
-USER_GH = os.getenv('github_username')
-PASSW_GH = os.getenv('github_password')
-REPO_NAME = os.getenv('github_repository_name')
 
 driver = webdriver.Chrome(PATH)
 
@@ -33,28 +23,28 @@ class User:
 
         if user_choice == 1:
 
-            EMAIL_CW = input("write your codewars email: ")
-            if '@' not in EMAIL_CW:
+            self.EMAIL_CW = input("write your codewars email: ")
+            if '@' not in self.EMAIL_CW:
                 self.closing_program()
-            USER_CW = input("write your codewars username: ")
-            PASSW_CW = input("write your codewars password: ")
+            self.USER_CW = input("write your codewars username: ")
+            self.PASSW_CW = input("write your codewars password: ")
 
-            EMAIL_GH = input("write your github email: ")
-            if '@' not in EMAIL_GH:
+            self.EMAIL_GH = input("write your github email: ")
+            if '@' not in self.EMAIL_GH:
                 self.closing_program()
-            USER_GH = input("write your github username: ")
-            PASSW_GH = input("write your github password: ")
-            REPO_NAME = input("write your exact github repo name: ")
+            self.USER_GH = input("write your github username: ")
+            self.PASSW_GH = input("write your github password: ")
+            self.REPO_NAME = input("write your exact github repo name: ")
 
         else:
-            EMAIL_CW = os.getenv('codewars_email')
-            USER_CW = os.getenv('codewars_username')
-            PASSW_CW = os.getenv('codewars_password')
+            self.EMAIL_CW = os.getenv('codewars_email')
+            self.USER_CW = os.getenv('codewars_username')
+            self.PASSW_CW = os.getenv('codewars_password')
 
-            EMAIL_GH = os.getenv('github_email')
-            USER_GH = os.getenv('github_username')
-            PASSW_GH = os.getenv('github_password')
-            REPO_NAME = os.getenv('github_repository_name')
+            self.EMAIL_GH = os.getenv('github_email')
+            self.USER_GH = os.getenv('github_username')
+            self.PASSW_GH = os.getenv('github_password')
+            self.REPO_NAME = os.getenv('github_repository_name')
 
     #if something is not right, method which closes active program
     def closing_program(self):
@@ -68,16 +58,16 @@ class User:
     def codewars_login_and_code_copying(self):
         #finding email field and pasting yours into
         email_typein = driver.find_element_by_id('user_email')
-        email_typein.send_keys(EMAIL_CW)
+        email_typein.send_keys(self.EMAIL_CW)
 
         #finding password field and pasting yours into
         passw_typein = driver.find_element_by_id('user_password')
-        passw_typein.send_keys(PASSW_CW)
+        passw_typein.send_keys(self.PASSW_CW)
 
         email_typein.send_keys(Keys.RETURN)
 
         #going to the user solutions
-        driver.get('https://www.codewars.com/users/' + USER_CW + '/completed_solutions')
+        driver.get('https://www.codewars.com/users/' + self.USER_CW + '/completed_solutions')
 
         #copying first code in solutions
         program_code = driver.find_element_by_class_name('mb-5px')
@@ -93,16 +83,16 @@ class User:
     def github_submission(self, kata_name, program_code):
         #finding email field and pasting yours into
         email_typein = driver.find_element_by_id('login_field')
-        email_typein.send_keys(EMAIL_GH)
+        email_typein.send_keys(self.EMAIL_GH)
 
         #finding password field and pasting yours into
         passw_typein = driver.find_element_by_id('password')
-        passw_typein.send_keys(PASSW_CW)
+        passw_typein.send_keys(self.PASSW_CW)
 
         email_typein.send_keys(Keys.RETURN)
 
         #going to user repo
-        driver.get('https://github.com/' + USER_GH + '/' + REPO_NAME + '/new/master')
+        driver.get('https://github.com/' + self.USER_GH + '/' + self.REPO_NAME + '/new/master')
 
         #pasting kata name
         filename = driver.find_element_by_name('filename')
