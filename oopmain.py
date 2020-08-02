@@ -55,7 +55,12 @@ class User:
     def site_opening(self, website):
         driver.get(website)
 
-    def codewars_login_and_code_copying(self):
+    def codewars_github_login(self):
+        github_login_icon = driver.find_element_by_class_name('btn')
+        github_login_icon.click()
+        self.github_login()
+
+    def codewars_normal_login(self):
         #finding email field and pasting yours into
         email_typein = driver.find_element_by_id('user_email')
         email_typein.send_keys(self.EMAIL_CW)
@@ -66,6 +71,7 @@ class User:
 
         email_typein.send_keys(Keys.RETURN)
 
+    def codewars_copying(self):
         #going to the user solutions
         driver.get('https://www.codewars.com/users/' + self.USER_CW + '/completed_solutions')
 
@@ -80,7 +86,7 @@ class User:
 
         return [kata_name_for_github, program_split_by_nl]
 
-    def github_submission(self, kata_name, program_code):
+    def github_login(self):
         #finding email field and pasting yours into
         email_typein = driver.find_element_by_id('login_field')
         email_typein.send_keys(self.EMAIL_GH)
@@ -88,9 +94,10 @@ class User:
         #finding password field and pasting yours into
         passw_typein = driver.find_element_by_id('password')
         passw_typein.send_keys(self.PASSW_CW)
-
+        
         email_typein.send_keys(Keys.RETURN)
 
+    def github_code_submission(self, kata_name, program_code):
         #going to user repo
         driver.get('https://github.com/' + self.USER_GH + '/' + self.REPO_NAME + '/new/master')
 
@@ -112,8 +119,23 @@ class User:
 
 test = User()
 
-test.site_opening('https://www.codewars.com/users/sign_in')
-codewars_data = test.codewars_login_and_code_copying()
+test.site_opening('https://www.codewars.com/users/sign_in') #site opening
+
+try:
+    codewars_login_type = int(input("Do you login to codewars with: \n1. email/password\n2. github\nWrite number (1 or 2): ")) #checking if user if loging in with github or not
+except:
+    test.closing_program()
+
+if codewars_login_type == 1:
+    test.codewars_normal_login()
+    codewars_data = test.codewars_copying()
+    
+else:
+    test.codewars_github_login()
+    codewars_data = test.codewars_copying()
+
 
 test.site_opening('https://github.com/login')
-test.github_submission(codewars_data[0], codewars_data[1])
+if codewars_login_type == 1:
+    test.github_login()
+test.github_code_submission(codewars_data[0], codewars_data[1])
