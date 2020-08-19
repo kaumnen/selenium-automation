@@ -95,7 +95,18 @@ class User:
         passw_typein = driver.find_element_by_id('password')
         passw_typein.send_keys(self.PASSW_GH)
         
+        time.sleep(1)
+
         email_typein.send_keys(Keys.RETURN)
+
+        time.sleep(2)
+
+        #if user is first time loging in codewars with github, should authorize
+        try:
+            driver.find_element_by_id("js-oauth-authorize-btn").click() #clicking on authorize button
+            time.sleep(2)
+        except:
+            pass
 
     def github_code_submission(self, kata_name, program_code):
         #going to user repo
@@ -121,21 +132,20 @@ test = User()
 
 test.site_opening('https://www.codewars.com/users/sign_in') #site opening
 
-try:
+try: #if input is not either 1 or 2, closing program
     codewars_login_type = int(input("Do you login to codewars with: \n1. email/password\n2. github\nWrite number (1 or 2): ")) #checking if user if loging in with github or not
 except:
     test.closing_program()
 
-if codewars_login_type == 1:
+if codewars_login_type == 1: #if user wants to login with email/password combination
     test.codewars_normal_login()
     codewars_data = test.codewars_copying()
     
-else:
+else: #if user wants to login on CodeWars through github
     test.codewars_github_login()
     codewars_data = test.codewars_copying()
 
-
 test.site_opening('https://github.com/login')
-if codewars_login_type == 1:
+if codewars_login_type == 1: #loging in github if it isnt used on codewars login
     test.github_login()
-test.github_code_submission(codewars_data[0], codewars_data[1])
+test.github_code_submission(codewars_data[0], codewars_data[1]) #copying code
