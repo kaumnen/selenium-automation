@@ -13,6 +13,9 @@ PATH = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome(PATH)
 
 class User:
+
+    twoFA = None #if 2FA if enabled or not
+
     def __init__(self):
         user_choice = input("Do you want to: \n1. write your credentials here \n2. use .env file? \nwrite number 1 or 2: ")
 
@@ -24,18 +27,28 @@ class User:
 
         if user_choice == 1:
 
-            self.EMAIL_CW = input("write your codewars email: ")
-            if '@' not in self.EMAIL_CW:
-                self.closing_program()
-            self.USER_CW = input("write your codewars username: ")
-            self.PASSW_CW = input("write your codewars password: ")
-
             self.EMAIL_GH = input("write your github email: ")
             if '@' not in self.EMAIL_GH:
                 self.closing_program()
             self.USER_GH = input("write your github username: ")
             self.PASSW_GH = input("write your github password: ")
             self.REPO_NAME = input("write your exact github repo name: ")
+            
+            try:
+                emailpass = int(input("If you login on codewars with github, type 1 and hit enter, if not, go with 2: "))
+            except:
+                self.closing_program()
+
+            if emailpass == 2: #if user logins to codewars with email/passw combo
+
+                self.EMAIL_CW = input("write your codewars email: ")
+                if '@' not in self.EMAIL_CW:
+                    self.closing_program()
+                self.USER_CW = input("write your codewars username: ")
+                self.PASSW_CW = input("write your codewars password: ")
+            
+            else: #if user logins to codewars with github, he will have same usernames
+                self.USER_CW = self.USER_GH
 
         else:
             self.EMAIL_CW = os.getenv('codewars_email')
@@ -88,6 +101,7 @@ class User:
         return [kata_name_for_github, program_split_by_nl]
 
     def github_login(self):
+
         #finding email field and pasting yours into
         email_typein = driver.find_element_by_id('login_field')
         email_typein.send_keys(self.EMAIL_GH)
@@ -101,6 +115,9 @@ class User:
         email_typein.send_keys(Keys.RETURN)
 
         time.sleep(2)
+
+        if self.twoFA == 1:
+            time.sleep(30)
 
         #if user is first time loging in codewars with github, should authorize
         try:
@@ -152,18 +169,33 @@ test = User()
 
 test.site_opening('https://www.codewars.com/users/sign_in') #site opening
 
-try: #if input is not either 1 or 2, closing program
-    codewars_login_type = int(input("Do you login to codewars with: \n1. email/password\n2. github\nWrite number (1 or 2): ")) #checking if user if loging in with github or not
-except:
-    test.closing_program()
+fa2 = input("\nDo you use 2 Factor auth? y/n\n")
+
+if fa2 == 'y':
+    test.twoFA = 1
+    print("\nYou will have 30 seconds to type in 2fa code. \n")
+else:
+    test.twoFA = 0
+
+if not test.USER_CW or test.twoFA == 1:
+    test.codewars_github_login()
+    codewars_login_type = None
+
+else:
+    try: #if input is not either 1 or 2, closing program
+        codewars_login_type = int(input("Do you login to codewars with: \n1. email/password\n2. github\nWrite number (1 or 2): ")) #checking if user if loging in with github or not
+    except:
+        test.closing_program()
 
 if codewars_login_type == 1: #if user wants to login with email/password combination
     test.codewars_normal_login()
     codewars_data = test.codewars_copying()
     
-else: #if user wants to login on CodeWars through github
+elif codewars_login_type == 2: #if user wants to login on CodeWars through github
+
     test.codewars_github_login()
-    codewars_data = test.codewars_copying()
+
+codewars_data = test.codewars_copying()
 
 test.site_opening('https://github.com/login')
 if codewars_login_type == 1: #loging in github if it isnt used on codewars login
