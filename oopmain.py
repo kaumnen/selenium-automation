@@ -93,7 +93,7 @@ class User:
 
         #finding password field and pasting yours into
         passw_typein = driver.find_element_by_id('password')
-        passw_typein.send_keys(self.PASSW_CW)
+        passw_typein.send_keys(self.PASSW_GH)
         
         email_typein.send_keys(Keys.RETURN)
 
