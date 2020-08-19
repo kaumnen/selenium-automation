@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+import re
 import os
 from dotenv import load_dotenv
 import sys
@@ -13,7 +14,7 @@ driver = webdriver.Chrome(PATH)
 
 class User:
     def __init__(self):
-        user_choice = input("Do you want to: \n1. write your credentials here \n2.use .env file? \nwrite number 1 or 2: ")
+        user_choice = input("Do you want to: \n1. write your credentials here \n2. use .env file? \nwrite number 1 or 2: ")
 
         if user_choice.isdigit() and 0 < int(user_choice) < 3:
             user_choice = int(user_choice)
@@ -83,7 +84,7 @@ class User:
         kata_kyu = driver.find_element_by_class_name('item-title')
         kata_prep = kata_kyu.text.split('\n')
         kata_name_for_github = f'[{kata_prep[0]}] {kata_prep[1]}.py'
-
+        
         return [kata_name_for_github, program_split_by_nl]
 
     def github_login(self):
@@ -108,6 +109,15 @@ class User:
         except:
             pass
 
+    def num_of_needed_backspace(self, row):
+        if not re.search(r'(^ +)', row):
+            whitespace = 0
+        else:
+            whitespace = len(re.search(r'(^ +)', row)[0])
+       
+        return whitespace
+        
+
     def github_code_submission(self, kata_name, program_code):
         #going to user repo
         driver.get('https://github.com/' + self.USER_GH + '/' + self.REPO_NAME + '/new/master')
@@ -118,11 +128,14 @@ class User:
 
         #pasting code inside github
         code_area = driver.find_element_by_class_name('CodeMirror-code')
-        #code_area.send_keys(programm)
-        #ActionChains(driver).move_to_element(code_area).click(code_area)
+        
         for i in program_code:
             code_area.send_keys(i)
             code_area.send_keys('\n')
+            white_space = self.num_of_needed_backspace(i)
+            for i in range(white_space):
+                code_area.send_keys(Keys.BACKSPACE)
+            
 
         #submitting code to repo
         commit_button = driver.find_element_by_id('submit-file')
