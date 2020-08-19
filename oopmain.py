@@ -109,6 +109,7 @@ class User:
         except:
             pass
 
+    #function counting whitespace at the start of each line in code
     def num_of_needed_backspace(self, row):
         if not re.search(r'(^ +)', row):
             whitespace = 0
@@ -130,8 +131,14 @@ class User:
         code_area = driver.find_element_by_class_name('CodeMirror-code')
         
         for i in program_code:
+
             code_area.send_keys(i)
             code_area.send_keys('\n')
+
+            #when new-line character is sent on github, new line starts just below start of previous one, not from the begining of line
+            #so im counting starting whitespace with function, and deleting it
+
+            #if you want to see what I mean, just comment-out for loop below, and you will understand problem
             white_space = self.num_of_needed_backspace(i)
             for i in range(white_space):
                 code_area.send_keys(Keys.BACKSPACE)
