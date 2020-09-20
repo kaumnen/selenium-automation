@@ -7,3 +7,5 @@ you can input credentials with inside terminal, or edit .env file with your cred
 currently supporting github and codewars
 
 feel free to use credentials in .env file, they are made only for testing purposes!
+
+You can see how it works using following link: [video](https://streamable.com/anbwpm)
