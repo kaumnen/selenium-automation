@@ -1,8 +1,8 @@
 In Progress...
 
-python automation including copying code from codewars and pasting in inside github
+python automation including copying code from codewars and pasting on github
 
-you can input credentials with inside terminal, or edit .env file with your creds for specific sites
+you can input credentials via terminal, or edit .env file with your creds for specific sites
 
 currently supporting github and codewars
 
